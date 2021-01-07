@@ -1,24 +1,21 @@
+const path = require('path');
 const express = require('express');
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
+
 const app = express();
 
-// Middlewares are executed in sequence, provided the filter is allowing it or they are linked via next() commands
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.use(bodyparser.urlencoded({extended: false}));
+//! Middlewares are executed in sequence, provided the filter is allowing it or they are linked via next() commands
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/add-product', (req, res, next) => {
-    res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></input>');
-})
+app.use('/admin', adminRoutes);  //* '/admin' is a filter for the urls!
+app.use(shopRoutes);
 
-app.use('/product', (req, res, _) => {
-    console.log(req.body);
-    res.redirect('/');
-})
-
-//! This path means any paths starting with '/'!
 app.use('/', (req, res, next) => {
-    res.send('<h1>Hello from Express!</h1>');
-})
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
 
 app.listen(3000);
 
