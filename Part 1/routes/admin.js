@@ -1,21 +1,25 @@
 const path = require('path');
+
 const express = require('express');
 
 const rootDir = require('../util/path');
 
 const router = express.Router();
 
-//! app.get ensures the middleware runs only for GET requests
-// Implicitly we are looking for this url path /admin/add-product => GET
+const products = [];
+
+// /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'views','add-product.html'));
+  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
 });
 
-//! app.post ensures the middleware runs only for POST requests
 // /admin/add-product => POST
-router.post('/add-product', (req, res, _) => {
-    console.log(req.body);
-    res.redirect('/');
+router.post('/add-product', (req, res, next) => {
+  // console.log(req.body);
+  products.push({title: req.body.title},)
+  res.redirect('/');
 });
 
-module.exports = router;
+// module.exports = router;
+exports.routes = router;
+exports.products = products;
