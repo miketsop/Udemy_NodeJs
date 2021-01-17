@@ -4,8 +4,15 @@ const express = require('express');
 const router = express.Router();
 const rootDir = require('../util/path');
 
+const userData = require('./addUser');
+
 router.get('/users', (req, res, next) => {
-    res.sendFile(path.join(rootDir,'views','users.html'))
+    const users = userData.users;
+    console.log(users);
+    res.render('users', {
+        pageTitle: 'Users!',
+        users: users,
+    })
 });
 
-module.exports = router;
+exports.routes = router;
