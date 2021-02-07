@@ -4,11 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/404');
+const sequelize = require('./util/database');
 
 const app = express();
 
-// const expressHbs = require('express-handlebars');
-// app.engine('handlebars', expressHbs({ layoutsDir: 'views/layouts', defaultLayout: 'main-layout' })); // the 1st argument must match the ending of the respective files
 app.set('view engine', 'ejs');  //  which rendering engine we use
 app.set('views', 'views');      //  where ejs can find our views...
 
@@ -22,4 +21,11 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
 
-app.listen(3000);
+// Looks at all sequelize.define for your models
+sequelize.sync().
+    then(result => {
+        app.listen(3000);
+    })
+    .catch(err => {
+        console.log(err);
+    });
